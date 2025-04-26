@@ -22,6 +22,11 @@ import { Button } from "@/components/ui/button";
 import { formSchema } from "./schema";
 import { fields } from "./fields";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "@/slices/authSlice";
+import { useAppDispatch } from "@/store";
+import { toResponseData } from "@/transformers/toResponseData";
+import { toUser } from "@/transformers/toUser";
 
 const getColSpanByName = (fieldName: string) => {
   switch (fieldName) {
@@ -35,11 +40,7 @@ const getColSpanByName = (fieldName: string) => {
   }
 };
 
-interface SignUpFormProps {
-  onLogin: () => void;
-}
-
-const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
+const SignUpForm: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -53,6 +54,9 @@ const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
     },
   });
 
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await fetch("/codex/auth/signup", {
@@ -65,11 +69,16 @@ const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
 
       const data = await response.json();
 
-      if ("error" in data) {
-        throw new Error(data.error.message || data.error);
+      const user = toUser(toResponseData(data));
+
+      if ("error" in data || !user) {
+        throw new Error(
+          data.error.message || data.error || "Неизвестный пользователь!"
+        );
       }
 
-      toast.success("Пользователь авторизован!");
+      dispatch(login(user));
+      navigate("/");
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -135,9 +144,9 @@ const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
           <div className="text-xs lg:text-sm">
             <span>Уже есть аккаунт?</span>
             &nbsp;
-            <a href="#" className="underline font-medium" onClick={onLogin}>
+            <Link className="underline font-medium" to="/auth/login">
               Войти
-            </a>
+            </Link>
           </div>
         </div>
       </form>

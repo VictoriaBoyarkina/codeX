@@ -20,6 +20,7 @@ type SignupFormFields =
       name:
         | "firstName"
         | "lastName"
+        | "email"
         | "nickname"
         | "password"
         | "confirmPassword";

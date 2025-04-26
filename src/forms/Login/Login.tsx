@@ -16,15 +16,23 @@ import { Button } from "@/components/ui/button";
 import { formSchema } from "./schema";
 import { fields } from "./fileds";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store";
+import { login } from "@/slices/authSlice";
+import { toUser } from "@/transformers/toUser";
+import { toResponseData } from "@/transformers/toResponseData";
 
-interface LoginFormProps {
-  onSignup: () => void;
-}
-
-const LoginForm: FC<LoginFormProps> = ({ onSignup }) => {
+const LoginForm: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      nickname: "",
+      password: "",
+    },
   });
+
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -37,12 +45,16 @@ const LoginForm: FC<LoginFormProps> = ({ onSignup }) => {
       });
 
       const data = await response.json();
+      const user = toUser(toResponseData(data));
 
-      if ("error" in data) {
-        throw new Error(data.error.message || data.error);
+      if ("error" in data || !user) {
+        throw new Error(
+          data.error.message || data.error || "Неизвестный пользователь!"
+        );
       }
 
-      toast.success("Пользователь авторизован!");
+      dispatch(login(user));
+      navigate("/");
     } catch (error) {
       toast.error((error as Error).message);
     }
@@ -78,9 +90,9 @@ const LoginForm: FC<LoginFormProps> = ({ onSignup }) => {
           <div className="text-xs lg:text-sm">
             <span>Нет аккаунта?</span>
             &nbsp;
-            <a href="#" className="underline font-medium" onClick={onSignup}>
+            <Link className="underline font-medium" to="/auth/signup">
               Зарегистрироваться
-            </a>
+            </Link>
           </div>
         </div>
       </form>
