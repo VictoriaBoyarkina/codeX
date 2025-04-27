@@ -17,13 +17,18 @@ type SelectProps = Omit<InputProps, "type"> & {
 
 type SignupFormFields =
   | (Omit<InputProps, "name"> & {
-      name: "firstName" | "lastName" | "login" | "password" | "confirmPassword";
+      name:
+        | "firstName"
+        | "lastName"
+        | "nickname"
+        | "password"
+        | "confirmPassword";
     })
   | (Omit<SelectProps, "name"> & { name: "role" });
 
 type LoginFormFields =
   | Omit<InputProps, "name"> & {
-      name: "login" | "password";
+      name: "nickname" | "password";
     };
 
 export type { InputProps, SelectProps, SignupFormFields, LoginFormFields };
