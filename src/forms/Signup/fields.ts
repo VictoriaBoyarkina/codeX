@@ -1,4 +1,5 @@
 import { SignupFormFields } from "@/forms/types";
+import { UserRoles } from "@/types";
 
 export const fields: SignupFormFields[] = [
   {
@@ -43,12 +44,18 @@ export const fields: SignupFormFields[] = [
     name: "role",
     label: "Роль",
     options: [
-      { value: "Frontend Developer", label: "Frontend Developer" },
-      { value: "Backend Developer", label: "Backend Developer" },
-      { value: "QA Engineer", label: "QA Engineer" },
-      { value: "Designer", label: "Designer" },
-      { value: "Manager", label: "Manager" },
-      { value: "HR", label: "HR" },
+      {
+        value: UserRoles.FRONTEND_DEVELOPER,
+        label: UserRoles.FRONTEND_DEVELOPER,
+      },
+      {
+        value: UserRoles.BACKEND_DEVELOPER,
+        label: UserRoles.BACKEND_DEVELOPER,
+      },
+      { value: UserRoles.QA_ENGINEER, label: UserRoles.QA_ENGINEER },
+      { value: UserRoles.DESIGNER, label: UserRoles.DESIGNER },
+      { value: UserRoles.MANAGER, label: UserRoles.MANAGER },
+      { value: UserRoles.HR, label: UserRoles.HR },
     ],
   },
 ];

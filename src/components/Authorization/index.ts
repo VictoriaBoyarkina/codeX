@@ -1,3 +1,5 @@
-import Authorization from "./Authorization";
+import AuthLayout from "./AuthLayout";
+import Login from "./Login";
+import Signup from "./Signup";
 
-export default Authorization;
+export { AuthLayout, Signup, Login };

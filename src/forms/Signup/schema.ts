@@ -23,3 +23,5 @@ export const formSchema = z
     message: "Пароли не совпадают",
     path: ["confirmPassword"],
   });
+
+export type SignupForm = z.infer<typeof formSchema>;

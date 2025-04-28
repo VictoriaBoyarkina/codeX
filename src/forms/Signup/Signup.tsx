@@ -1,7 +1,6 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -19,9 +18,12 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { formSchema } from "./schema";
+import { formSchema, SignupForm as SignupFormType } from "./schema";
 import { fields } from "./fields";
 import { toast } from "sonner";
+import { Link, useNavigate } from "react-router-dom";
+import { register } from "@/slices/authSlice";
+import { useAppDispatch } from "@/store";
 
 const getColSpanByName = (fieldName: string) => {
   switch (fieldName) {
@@ -35,12 +37,10 @@ const getColSpanByName = (fieldName: string) => {
   }
 };
 
-interface SignUpFormProps {
-  onLogin: () => void;
-}
+const SignUpForm: FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
 
-const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<SignupFormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
@@ -53,25 +53,19 @@ const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const onSubmit = async (values: SignupFormType) => {
     try {
-      const response = await fetch("/codex/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      setIsLoading(true);
+      await dispatch(register(values)).unwrap();
 
-      const data = await response.json();
-
-      if ("error" in data) {
-        throw new Error(data.error.message || data.error);
-      }
-
-      toast.success("Пользователь авторизован!");
+      navigate("/");
     } catch (error) {
-      toast.error((error as Error).message);
+      toast.error((error as Error).message || "Не удалось выполнить вход");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -129,15 +123,19 @@ const SignUpForm: FC<SignUpFormProps> = ({ onLogin }) => {
           );
         })}
         <div className="col-span-2 flex items-center gap-x-4 mt-4">
-          <Button type="submit" variant="light" className="rounded-[50px]">
+          <Button
+            loading={isLoading}
+            type="submit"
+            variant="light"
+            className="rounded-[50px]"
+          >
             Регистрация
           </Button>
-          <div className="text-xs lg:text-sm">
+          <div className="flex gap-x-1 text-xs flex-wrap lg:text-sm">
             <span>Уже есть аккаунт?</span>
-            &nbsp;
-            <a href="#" className="underline font-medium" onClick={onLogin}>
+            <Link className="underline font-medium" to="/auth/login">
               Войти
-            </a>
+            </Link>
           </div>
         </div>
       </form>
