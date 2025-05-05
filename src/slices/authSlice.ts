@@ -1,11 +1,9 @@
-import { User } from "@/types";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { QueryStatus } from "./types";
 import { toResponseData } from "@/transformers/toResponseData";
-import { toUser } from "@/transformers/toUser";
-import { LoginForm } from "@/forms/Login/schema";
-import { SignupForm } from "@/forms/Signup/schema";
+import { toUser, User } from "@/transformers/toUser";
 import { RootState } from "@/store";
+import { AuthForm } from "@/components/forms/Auth/schema";
 
 export const auth = createAsyncThunk(
   "auth",
@@ -35,7 +33,7 @@ export const auth = createAsyncThunk(
   }
 );
 
-export const login = createAsyncThunk("login", async (values: LoginForm) => {
+export const login = createAsyncThunk("login", async (values: AuthForm) => {
   const response = await fetch("/codex/login", {
     method: "POST",
     headers: {
@@ -49,7 +47,7 @@ export const login = createAsyncThunk("login", async (values: LoginForm) => {
 
   if (!response.ok || "error" in data || !user) {
     throw new Error(
-      data.error.message || data.error || "Неизвестный пользователь!"
+      data.error.message || data.error || "Не удалось зарегистрироваться!"
     );
   }
 
@@ -58,7 +56,7 @@ export const login = createAsyncThunk("login", async (values: LoginForm) => {
 
 export const register = createAsyncThunk(
   "register",
-  async (values: SignupForm) => {
+  async (values: AuthForm) => {
     const response = await fetch("/codex/register", {
       method: "POST",
       headers: {
@@ -72,7 +70,7 @@ export const register = createAsyncThunk(
 
     if (!response.ok || "error" in data || !user) {
       throw new Error(
-        data.error.message || data.error || "Неизвестный пользователь!"
+        data.error.message || data.error || "Не удалось выполнить вход!"
       );
     }
 
@@ -98,6 +96,7 @@ interface AuthSliceState {
   status: QueryStatus;
   error: any;
   isRequestSent: boolean;
+  isSubmitting: boolean;
 }
 
 const initialState: AuthSliceState = {
@@ -106,6 +105,7 @@ const initialState: AuthSliceState = {
   status: "idle",
   error: null,
   isRequestSent: false,
+  isSubmitting: false,
 };
 
 const authSlice = createSlice({
@@ -133,41 +133,54 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.error = action.payload;
       })
-      .addCase(logout.pending, (state) => {
-        state.error = null;
-      })
-      .addCase(logout.fulfilled, (state) => {
-        state.status = "succeeded";
-        state.user = null;
-        state.isAuthenticated = false;
-      })
       .addCase(login.pending, (state) => {
         state.error = null;
+        state.isSubmitting = true;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.isSubmitting = false;
       })
       .addCase(login.rejected, (state, action) => {
         state.status = "failed";
         state.user = null;
         state.isAuthenticated = false;
         state.error = action.payload;
+        state.isSubmitting = false;
       })
       .addCase(register.pending, (state) => {
         state.error = null;
+        state.isSubmitting = true;
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.user = action.payload;
         state.isAuthenticated = true;
+        state.isSubmitting = false;
       })
       .addCase(register.rejected, (state, action) => {
         state.status = "failed";
         state.user = null;
         state.isAuthenticated = false;
         state.error = action.payload;
+        state.isSubmitting = false;
+      })
+      .addCase(logout.pending, (state) => {
+        state.error = null;
+        state.isSubmitting = true;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.status = "succeeded";
+        state.user = null;
+        state.isAuthenticated = false;
+        state.isSubmitting = false;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+        state.isSubmitting = false;
       });
   },
 });

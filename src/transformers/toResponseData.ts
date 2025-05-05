@@ -1,4 +1,4 @@
-import { isObject } from "@/utils/helper";
+import { isObject } from "@/utils/helpers";
 
 const toResponseData = (response: unknown) => {
   if (isObject(response) && "data" in response) {

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { CardContent, CardHeader, CardNoBorders, CardTitle } from "../ui/card";
-import { SignupForm } from "@/forms/Signup";
+import { AuthForm } from "../forms/Auth";
 
 const Signup: FC = () => {
   return (
@@ -9,7 +9,7 @@ const Signup: FC = () => {
         <CardTitle className="text-xl">Регистрация</CardTitle>
       </CardHeader>
       <CardContent>
-        <SignupForm />
+        <AuthForm signup={true} />
       </CardContent>
     </CardNoBorders>
   );

@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./store";
 import { auth } from "./slices/authSlice";
-import { Outlet } from "react-router-dom";
+import { RouterProvider } from "react-router-dom";
 import { Loader } from "./components/Loader";
+import { router } from "./router";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -13,7 +14,13 @@ function App() {
   }, [dispatch]);
 
   return (
-    <>{status === "loading" || status === "idle" ? <Loader /> : <Outlet />}</>
+    <>
+      {status === "loading" || status === "idle" ? (
+        <Loader />
+      ) : (
+        <RouterProvider router={router} />
+      )}
+    </>
   );
 }
 

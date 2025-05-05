@@ -3,6 +3,7 @@ type InputProps = {
   placeholder: string;
   name: string;
   label: string;
+  className?: string;
 };
 
 type Option = {
@@ -15,7 +16,7 @@ type SelectProps = Omit<InputProps, "type"> & {
   options: Option[];
 };
 
-type SignupFormFields =
+type AuthFormFields =
   | (Omit<InputProps, "name"> & {
       name:
         | "firstName"
@@ -25,11 +26,9 @@ type SignupFormFields =
         | "password"
         | "confirmPassword";
     })
-  | (Omit<SelectProps, "name"> & { name: "role" });
-
-type LoginFormFields =
-  | Omit<InputProps, "name"> & {
+  | (Omit<SelectProps, "name"> & { name: "role" })
+  | (Omit<InputProps, "name"> & {
       name: "nickname" | "password";
-    };
+    });
 
-export type { InputProps, SelectProps, SignupFormFields, LoginFormFields };
+export type { InputProps, SelectProps, AuthFormFields };

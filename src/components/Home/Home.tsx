@@ -1,27 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAppDispatch } from "@/store";
-import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { logout } from "@/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const isSubmitting = useAppSelector((store) => store.auth.isSubmitting);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      setIsLoading(true);
       await dispatch(logout()).unwrap();
 
       navigate("/auth/login");
     } catch {
       toast.error("Не удалось выйти. Попробуйте ещё раз");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -40,7 +36,11 @@ const Home = () => {
             Это простая домашняя страница.
           </p>
 
-          <Button loading={isLoading} className="w-full" onClick={handleLogout}>
+          <Button
+            loading={isSubmitting}
+            className="w-full"
+            onClick={handleLogout}
+          >
             Выйти
           </Button>
         </CardContent>
