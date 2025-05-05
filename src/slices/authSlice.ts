@@ -3,7 +3,7 @@ import { QueryStatus } from "./types";
 import { toResponseData } from "@/transformers/toResponseData";
 import { toUser, User } from "@/transformers/toUser";
 import { RootState } from "@/store";
-import { AuthForm } from "@/components/forms/Auth/schema";
+import { AuthForm } from "@/components/Forms/Auth/schema";
 
 export const auth = createAsyncThunk(
   "auth",

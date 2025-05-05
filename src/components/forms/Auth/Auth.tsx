@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -65,15 +65,12 @@ const formStrategies = {
 };
 
 interface AuthFormProps {
-  signup: boolean;
+  formStrategy: "signup" | "login";
 }
 
-const AuthForm: FC<AuthFormProps> = ({ signup }) => {
+const AuthForm: FC<AuthFormProps> = ({ formStrategy }) => {
   const isSubmitting = useAppSelector((store) => store.auth.isSubmitting);
-  const strategy = useMemo(
-    () => (signup ? formStrategies.signup : formStrategies.login),
-    [signup]
-  );
+  const strategy = formStrategies[formStrategy];
 
   const form = useForm<AuthFormType>({
     resolver: zodResolver(strategy.schema),
