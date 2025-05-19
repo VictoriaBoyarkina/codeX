@@ -1,50 +1,63 @@
-# React + TypeScript + Vite
+# 💻 codeX — социальная платформа для IT-специалистов
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**codeX** — это социальная сеть для IT-специалистов, которая объединяет человека и процессы в едином цифровом пространстве.  
+Здесь встречаются разработчики, команды, проекты, обсуждения и всё, что нужно для продуктивной работы и общения в мире IT.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🧱 Архитектура проекта
 
-## Expanding the ESLint configuration
+Этот репозиторий содержит только **frontend**-часть приложения.  
+[Бэкенд](https://git.zuzex.com/vboyarkina/codex-backend) запускается отдельно, например по адресу `http://localhost:3000`.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+---
 
-- Configure the top-level `parserOptions` property like this:
+## 🚀 Быстрый старт
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. **Клонируй репозиторий**
+
+```bash
+git clone https://git.zuzex.com/vboyarkina/codex.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+---
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. **Установи зависимости**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+pnpm install
+# или
+npm install
+```
+
+---
+
+3. **Создай файл .env**
+
+```bash
+cp .env.example .env
+```
+
+И укажи необходимые переменные окружения:
+
+```bash
+VITE_API_URL=http://localhost:3000
+```
+
+---
+
+4. **Запусти проект**
+
+```bash
+pnpm dev
+# или
+npm run dev
+```
+
+5. **Сбока проекта**
+
+```bash
+pnpm build
+# или
+npm run build
 ```
