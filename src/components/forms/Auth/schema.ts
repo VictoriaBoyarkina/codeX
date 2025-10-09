@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AuthFormFields } from "../types";
 import { UserRoles } from "@/transformers/toUser";
+import { AuthFormFields } from "../types";
 
 export const signupFormSchema = z
   .object({

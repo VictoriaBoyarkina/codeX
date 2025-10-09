@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { CardContent, CardHeader, CardNoBorders, CardTitle } from "../ui/card";
-import { AuthForm } from "../Forms/Auth";
+import { AuthForm } from "../forms/Auth";
 
 const Login: FC = () => {
   return (

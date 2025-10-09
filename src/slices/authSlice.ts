@@ -3,24 +3,24 @@ import { QueryStatus } from "./types";
 import { toResponseData } from "@/transformers/toResponseData";
 import { toUser, User } from "@/transformers/toUser";
 import { RootState } from "@/store";
-import { AuthForm } from "@/components/Forms/Auth/schema";
+import { AuthForm } from "@/components/forms/Auth/schema";
 
 export const auth = createAsyncThunk(
   "auth",
   async (_, { dispatch }) => {
     dispatch(setRequestSent());
 
-    const response = await fetch("/codex/auth", {
-      method: "GET",
-    });
+    // const response = await fetch("/codex/auth", {
+    //   method: "GET",
+    // });
 
-    const data = await response.json();
+    // const data = await response.json();
 
-    if (!response.ok || "error" in data) {
-      throw new Error(data.error.message || data.error);
-    }
+    // if (!response.ok || "error" in data) {
+    //   throw new Error(data.error.message || data.error);
+    // }
 
-    return toUser(toResponseData(data));
+    return toUser(toResponseData({}));
   },
   {
     condition: (_, { getState }) => {

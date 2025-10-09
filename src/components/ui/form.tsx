@@ -3,17 +3,20 @@ import * as React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import {
+  Control,
   Controller,
+  ControllerRenderProps,
   FormProvider,
+  Path,
   useFormContext,
   useFormState,
   type ControllerProps,
   type FieldPath,
   type FieldValues,
 } from "react-hook-form";
-
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
+import { Typography } from "./typography";
 
 const Form = FormProvider;
 
@@ -150,7 +153,38 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
+function Field<T extends FieldValues>({
+  children,
+  control,
+  name,
+  label,
+}: {
+  children: (field: ControllerRenderProps<T>) => React.ReactNode;
+  control: Control<T, any>;
+  name: Path<T>;
+  label?: string;
+}) {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          {label && (
+            <FormLabel>
+              <Typography text={label} />
+            </FormLabel>
+          )}
+          <FormControl>{children(field)}</FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+}
+
 export {
+  Field,
   useFormField,
   Form,
   FormItem,

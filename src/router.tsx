@@ -3,12 +3,16 @@ import { AuthLayout, Login, Signup } from "@/components/Authorization";
 import { Home } from "@/components/Home";
 import { NotFoundPage } from "@/components/NotFoundPage";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import { FeedPage } from "./pages/feed/feed";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute />,
-    children: [{ index: true, element: <Home /> }],
+    children: [
+      { index: true, element: <Home /> },
+      { path: "posts", element: <FeedPage /> },
+    ],
   },
   {
     path: "auth",
